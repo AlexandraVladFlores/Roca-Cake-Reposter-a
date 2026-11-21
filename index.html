@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>>Roca Cake Repostería - Cotizador</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍰</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- En el <header> -->
+        <header>
+            <h1>Roca Cake Repostería</h1>
+            <p class="subtitulo-app">Cotizador de Pasteles Enteros y Rebanadas</p>
+        </header>
+
+        <!-- 1. Datos del Cliente y Pedido -->
+        <section class="card">
+            <h3>1. Datos del Cliente y Entrega</h3>
+            <div class="row">
+                <div class="col">
+                    <label for="folio">Folio:</label>
+                    <input type="text" id="folio" readonly>
+                </div>
+                <div class="col">
+                    <label for="fecha-entrega">Fecha de Entrega:</label>
+                    <input type="date" id="fecha-entrega">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label for="cliente">Nombre del Cliente:</label>
+                    <input type="text" id="cliente" placeholder="Ej. Sofía Ramírez">
+                </div>
+                <div class="col">
+                    <label for="hora-entrega">Hora Aprox.:</label>
+                    <input type="time" id="hora-entrega">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label for="tipo-pedido">Modalidad:</label>
+                    <select id="tipo-pedido">
+                        <option value="Pastel Entero">Pastel Entero</option>
+                        <option value="Rebanadas">Rebanadas</option>
+                        <option value="Pastel + Rebanadas">Pastel + Rebanadas</option>
+                        <option value="Pedido Especial">Pedido Especial</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="modalidad-entrega">Entrega:</label>
+                    <select id="modalidad-entrega">
+                        <option value="Recoger en local">Recoger en local</option>
+                        <option value="Envío a domicilio">Envío a domicilio</option>
+                    </select>
+                </div>
+            </div>
+
+            <label for="dedicatoria">Dedicatoria / Notas de Diseño (Opcional):</label>
+            <input type="text" id="dedicatoria" placeholder="Ej. Feliz cumpleaños Andrea / Sin nuez">
+        </section>
+
+        <!-- 2. Agregar Pasteles y Rebanadas -->
+        <section class="card">
+            <h3>2. Pasteles y Rebanadas</h3>
+
+            <label for="plantilla-producto">Selección Rápida (Opcional):</label>
+            <select id="plantilla-producto">
+                <option value="">-- Elegir pastel o rebanada --</option>
+                <option value="Rebanada Tres Leches Clásico|55">Rebanada Tres Leches Clásico</option>
+                <option value="Rebanada Chocolate Trufa|60">Rebanada Chocolate Trufa</option>
+                <option value="Rebanada Zanahoria con Nuez|58">Rebanada Zanahoria con Nuez</option>
+                <option value="Rebanada Red Velvet|62">Rebanada Red Velvet</option>
+                <option value="Caja de 6 Rebanadas Surtidas|320">Caja de 6 Rebanadas Surtidas</option>
+                <option value="Pastel Mediano (15-20 personas)|580">Pastel Mediano (15-20 personas)</option>
+                <option value="Pastel Grande (25-35 personas)|890">Pastel Grande (25-35 personas)</option>
+            </select>
+
+            <label for="descripcion">Producto (Sabor / Tamaño / Rebanada):</label>
+            <input type="text" id="descripcion" placeholder="Ej. Rebanada de fresa o Pastel tres leches">
+
+            <div class="row">
+                <div class="col">
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" min="1" value="1">
+                </div>
+                <div class="col">
+                    <label for="precio">Precio Unit. ($):</label>
+                    <input type="number" id="precio" placeholder="0.00" min="0" step="0.01">
+                </div>
+            </div>
+            <button type="button" id="btn-agregar" class="btn-secundario">+ Agregar al Pedido</button>
+        </section>
+
+        <!-- 3. Calculadora de Pagos, Envío e Impuestos -->
+        <section class="card">
+            <h3>3. Calculadora de Pagos</h3>
+
+            <div class="row">
+                <div class="col">
+                    <label for="costo-envio">Costo de Envío ($):</label>
+                    <input type="number" id="costo-envio" value="0" min="0" step="0.01">
+                </div>
+                <div class="col">
+                    <label for="porcentaje-anticipo">Anticipo (%):</label>
+                    <input type="number" id="porcentaje-anticipo" value="50" min="0" max="100">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label for="validez">Vigencia (días):</label>
+                    <input type="number" id="validez" value="7" min="1">
+                </div>
+                <div class="col checkbox-col">
+                    <div class="checkbox-row">
+                        <input type="checkbox" id="aplicar-iva">
+                        <label for="aplicar-iva">IVA (16%)</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Documento Elegante (Vista Previa, PDF e Imagen) -->
+        <section id="area-impresion" class="card documento-elegante">
+            <!-- Dentro de <section id="area-impresion" ...> -->
+            <div class="doc-header">
+                <div>
+                    <h2 class="nombre-negocio">ROCA CAKE REPOSTERÍA</h2>
+                    <p class="sub-negocio">Pasteles Artesanales &amp; Rebanadas del Día</p>
+                </div>
+                <div class="doc-folio">
+                    <p><strong>Folio:</strong> <span id="res-folio"></span></p>
+                    <p><strong>Fecha:</strong> <span id="res-fecha-emision"></span></p>
+                </div>
+            </div>
+
+            <div class="doc-datos-grid">
+                <div><strong>Cliente:</strong> <span id="res-cliente">---</span></div>
+                <div><strong>Entrega:</strong> <span id="res-fecha-entrega">Por definir</span></div>
+                <div><strong>Modalidad:</strong> <span id="res-tipo-pedido">Pastel Entero</span></div>
+                <div><strong>Hora / Envío:</strong> <span id="res-hora-entrega">---</span> · <span id="res-modalidad-entrega">Recoger en local</span></div>
+                <div class="full-width"><strong>Dedicatoria / Notas:</strong> <span id="res-dedicatoria">---</span></div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cant.</th>
+                        <th>Producto</th>
+                        <th>P. Unit</th>
+                        <th>Importe</th>
+                        <th class="no-print"></th>
+                    </tr>
+                </thead>
+                <tbody id="lista-items"></tbody>
+            </table>
+
+            <div class="totales-container">
+                <div class="total-linea">
+                    <span>Subtotal:</span>
+                    <span>$<span id="calc-subtotal">0.00</span></span>
+                </div>
+                <div class="total-linea" id="fila-envio" style="display: none;">
+                    <span>Envío:</span>
+                    <span>$<span id="calc-envio">0.00</span></span>
+                </div>
+                <div class="total-linea" id="fila-iva" style="display: none;">
+                    <span>IVA (16%):</span>
+                    <span>$<span id="calc-iva">0.00</span></span>
+                </div>
+                <div class="total-linea total-destacado">
+                    <span>TOTAL:</span>
+                    <span>$<span id="calc-total">0.00</span></span>
+                </div>
+                <div class="total-linea anticipo-linea">
+                    <span>Anticipo (<span id="res-porc-anticipo">50</span>%):</span>
+                    <span>$<span id="calc-anticipo">0.00</span></span>
+                </div>
+                <div class="total-linea saldo-linea">
+                    <span>Saldo restante:</span>
+                    <span>$<span id="calc-saldo">0.00</span></span>
+                </div>
+            </div>
+
+            <div class="doc-footer">
+                <p>* Cotización válida por <span id="res-validez">7</span> días naturales.</p>
+                <p>* Se requiere el <span id="res-porc-nota">50</span>% de anticipo para apartar o preparar su pedido.</p>
+            </div>
+        </section>
+
+        <!-- Botones de acción -->
+        <div class="acciones">
+            <button type="button" id="btn-pdf" class="btn-primario">Descargar Cotización en PDF</button>
+            <button type="button" id="btn-whatsapp" class="btn-whatsapp">Enviar Imagen por WhatsApp</button>
+            <button type="button" id="btn-limpiar" class="btn-peligro">Nueva Cotización (Limpiar)</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
